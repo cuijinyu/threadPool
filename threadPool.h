@@ -6,27 +6,43 @@
 #include <vector>
 
 using std::vector;
+using std::cout;
+using std::endl;
 class ThreadPool {
     private:
-        vector <pthread_t> threads;
-        vector <Task> tasks;
-        int threadNumber;
+        pthread_t * threads;
+        static vector <Task> tasks;
+        static int threadNumber;
+        static int maxNumber;
+        static bool alive;
         static pthread_mutex_t mutex;
         static pthread_cond_t cond;
         static void * runTask(void * taskData);
     public:
-        ThreadPool (int number) {
+        ThreadPool (int number, int maxNumber) {
+            alive = true;
             threadNumber = number;
+            maxNumber = maxNumber;
             createThreads();
         }
         ~ ThreadPool () {
-
+            // kill();
         }
         void createThreads() {
+            threads = new pthread_t[threadNumber];
             for (int i = 0; i < threadNumber; i++) {
-                pthread_t thread;
-                pthread_create(&thread, NULL, runTask, NULL);
+                pthread_create(&threads[i], NULL, runTask, NULL);
             }
+            return;
+        }
+        void addTask(Task * task);
+        bool kill();
+        bool getTasksSize() {
+            // cout << tasks.empty() << endl; 
+            return tasks.empty();
+        }
+        bool getAlive() {
+            return alive;
         }
 };  
 #endif

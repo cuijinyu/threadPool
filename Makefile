@@ -1,12 +1,12 @@
 CXX = g++
 threadPoolTest:threadPool.o task.o main.o
-	$(CXX) main.o threadPool.o task.o -o threadPoolTest -lpthread
-task.o:task.cc task.h
-	$(CXX) -c task.cc
-threadPool.o:threadPool.cc threadPool.h
-	$(CXX) -c threadPool.cc  -lpthread
+	$(CXX) main.o task.o threadPool.o -g -o threadPoolTest.out -lpthread
+task.o:task.cc task.h 
+	$(CXX) -c -g -Ddebug task.cc
+threadPool.o:threadPool.h threadPool.cc 
+	$(CXX) -c -g -Ddebug  threadPool.cc  -lpthread
 main.o:main.cc
-	$(CXX) -c main.cc
+	$(CXX) -c -g -Ddebug  main.cc
 .PHONY:clean
 clean:
 	-rm *.o

@@ -5,14 +5,19 @@ using std::string;
 class Task {
     private:
         string name;
-        void * func;
+        void *(*func)(void *args);
+        void *args;
     public:
-        Task (string taskName, void * f) {
+        Task (string taskName, void* f(void *args), void * args) {
             name = taskName;
             func = f;
+            this -> args = args;
         }
         ~Task () {
 
+        }
+        void runFunc() {
+            func(args);
         }
 };
 #endif
